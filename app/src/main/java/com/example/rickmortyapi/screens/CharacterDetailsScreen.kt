@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,10 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import com.example.network.KtorClient
-import com.example.rickmortyapi.components.CharacterDetailsNamePlateComponent
+import com.example.rickmortyapi.components.character.CharacterDetailsNamePlateComponent
 import com.example.rickmortyapi.components.common.DataPoint
 import com.example.rickmortyapi.components.common.DataPointComponent
-import com.example.rickmortyapi.components.common.LoadingState
 import com.example.rickmortyapi.ui.theme.RickAction
 import kotlinx.coroutines.delay
 import com.example.network.models.domain.Character
@@ -39,14 +39,14 @@ import com.example.network.models.domain.Character
 @Composable
 fun CharacterDetailsScreen(
     ktorClient: KtorClient,
-    characterId : Int,
+    characterId : Int
    //onEpisodeClicked : (Int) -> Unit
 ) {
 
     var character by remember { mutableStateOf<Character?>(null) }
 
-    val characterDataPoints: List<DataPoint> by remember {
-        //derivedState cambia col cambiare del "character"
+    val characterDataPoints : List<DataPoint> by remember {
+        //"derivedState" cambia col cambiare del "character"
         derivedStateOf {
             buildList {
                 character?.let { character  ->
@@ -75,18 +75,20 @@ fun CharacterDetailsScreen(
     )
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(all = 16.dp)
     ) {
         if (character == null) {
-            item { LoadingState() }
+            item {
+                LoadingState()
+            }
             return@LazyColumn
         }
 
         //NAME PLATE
         item {
             CharacterDetailsNamePlateComponent(
+                //!! = variabile non sarà mai null. rischioso, perché se è null crasha l'app
                 name = character!!.name,
                 status = character!!.status
             )
@@ -98,7 +100,6 @@ fun CharacterDetailsScreen(
         //IMAGE
         item {
             SubcomposeAsyncImage(
-                //!! = variabile non sarà mai null. rischioso, perché se è null crasha l'app
                 model = character!!.imageUrl,
                 contentDescription = "Character image",
                 modifier = Modifier
@@ -145,4 +146,14 @@ fun CharacterDetailsScreen(
         item { Spacer(modifier = Modifier.height(64.dp)) }
     }
 
+}
+
+@Composable
+private fun LoadingState() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(128.dp),
+        color = RickAction
+    )
 }
