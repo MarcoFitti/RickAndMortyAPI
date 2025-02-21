@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +25,7 @@ import com.example.network.KtorClient
 import com.example.network.TestFile
 import com.example.rickmortyapi.screens.CharacterDetailsScreen
 import com.example.rickmortyapi.ui.theme.RickMortyAPITheme
+import com.example.rickmortyapi.ui.theme.RickPrimary
 import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
@@ -31,11 +34,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
         setContent {
+            /*
             var character by remember {
                 mutableStateOf<Character?>(null)
             }
+
 
             LaunchedEffect(
                 key1 = Unit,
@@ -44,13 +49,20 @@ class MainActivity : ComponentActivity() {
                     character = ktorClient.getCharacter(12)
                 }
             )
-
+            */
 
             RickMortyAPITheme {
-                CharacterDetailsScreen(ktorClient, 12)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = RickPrimary
+                ) {
+                    CharacterDetailsScreen(
+                        ktorClient = ktorClient,
+                        characterId = 1
+                    )
+                }
 
             }
         }
     }
 }
-
