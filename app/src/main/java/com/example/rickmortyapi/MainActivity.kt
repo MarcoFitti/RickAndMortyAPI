@@ -18,9 +18,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.network.Character
+import com.example.network.models.domain.Character
 import com.example.network.KtorClient
 import com.example.network.TestFile
+import com.example.rickmortyapi.screens.CharacterDetailsScreen
 import com.example.rickmortyapi.ui.theme.RickMortyAPITheme
 import kotlinx.coroutines.delay
 
@@ -40,42 +41,16 @@ class MainActivity : ComponentActivity() {
                 key1 = Unit,
                 block = {
                     delay(3000)
-                    character = ktorClient.getCharacer(12)
+                    character = ktorClient.getCharacter(12)
                 }
             )
 
 
             RickMortyAPITheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                CharacterDetailsScreen(ktorClient, 12)
 
-                    Column {
-                        Greeting(
-                            name = "Android",
-                            modifier = Modifier.padding(innerPadding)
-                        )
-
-                        TestFile()
-
-                        Text(text = character?.name ?: "No character")
-                    }
-                }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RickMortyAPITheme {
-        Greeting("Android")
-    }
-}
