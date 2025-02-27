@@ -33,11 +33,20 @@ class KtorClient {
         }
     }
 
+    //CACHING: una volta svolte delle chiamate di rete, permette di salvare delle informazioni
+    //per prevenire la necessità di dover svolgere nuove chiamate per dati già acquisiti recentemente
+    //In questo es.: salviamo le informazioni principali del personaggio per non doverle richiamare
+    // ogni volta che scorriamo dalla loro  schermata a quella degli episodi
+    private var characterCache = mutableMapOf<Int, Character>()
+
+
     suspend fun getCharacter(id: Int): ApiOperation<Character> {
+        characterCache[id]?.let { return ApiOperation.Success(it) }
         return safeApiCall {
             client.get("character/$id")
                 .body<RemoteCharacter>()
                 .toDomainCharacter()
+                .also{ characterCache[id] = it }
         }
     }
 
@@ -45,7 +54,7 @@ class KtorClient {
         return try {
             ApiOperation.Success(data = apiCall())
         } catch (e : Exception) {
-            ApiOperation.Failure(e)
+            ApiOperation.Failure(exception = e)
         }
     }
 }
@@ -58,7 +67,7 @@ sealed interface ApiOperation<T> {
     data class Failure<T>(val exception : Exception) : ApiOperation<T>
 
     fun onSuccess(block : (T) -> Unit) : ApiOperation<T> {
-        if (this is Success) block (data)
+        if (this is Success) block(data)
         return this
     }
 
@@ -66,7 +75,6 @@ sealed interface ApiOperation<T> {
         if (this is Failure) block (exception)
         return this
     }
-
 
 }
 
