@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import com.example.network.ApiOperation
 import com.example.network.KtorClient
 import com.example.rickmortyapi.components.character.CharacterDetailsNamePlateComponent
 import com.example.rickmortyapi.components.common.DataPoint
@@ -66,7 +67,31 @@ fun CharacterDetailsScreen(
         key1 = Unit,
         block = {
             delay(500)
-            character = ktorClient.getCharacter(characterId)
+            //character = ktorClient.getCharacter(characterId)
+            /*
+            val apiOperation = ktorClient.getCharacter(characterId)
+            if (apiOperation is ApiOperation.Success) {
+
+
+            } else if (apiOperation is ApiOperation.Failure) {
+
+            }
+
+            apiOperation.onSuccess {
+
+            }.onFailure {
+
+            }
+
+            */
+            ktorClient
+                .getCharacter(characterId)
+                .onSuccess { char ->
+                    character = char
+                }.onFailure {exception ->
+                    // TODO handle exception
+
+                }
         }
     )
 
