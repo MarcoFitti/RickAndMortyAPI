@@ -39,9 +39,10 @@ import com.example.network.models.domain.Character
 @Composable
 fun CharacterDetailsScreen(
     ktorClient: KtorClient,
-    characterId : Int   //onEpisodeClicked : (Int) -> Unit
+    characterId : Int,
+    onEpisodeClicked : (Int) -> Unit
 ) {
-    var character : Character? by remember { mutableStateOf<Character?>(null) }
+    var character  by remember { mutableStateOf<Character?>(null) }
 
     val characterDataPoints : List<DataPoint> by remember {
         //"derivedState" cambia col cambiare del "character"
@@ -86,13 +87,12 @@ fun CharacterDetailsScreen(
             */
             ktorClient
                 .getCharacter(characterId)
-                .onSuccess { char ->
-                    character = char
-                }.onFailure {exception ->
+                .onSuccess {
+                    character = it
+                }.onFailure { exception ->
                     // TODO handle exception
-
                 }
-        }
+       }
     )
 
     LazyColumn(
@@ -157,10 +157,10 @@ fun CharacterDetailsScreen(
                     )
                     .clip(RoundedCornerShape(12.dp))
                     .clickable {
-                        // TODO onEpisodeClicked(characterId)
+                        onEpisodeClicked(characterId)
                     }
                     .padding(vertical = 8.dp)
-
+                    .fillMaxWidth()
             )
         }
 

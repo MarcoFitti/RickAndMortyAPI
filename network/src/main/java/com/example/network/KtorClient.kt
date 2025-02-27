@@ -45,7 +45,7 @@ class KtorClient {
         return try {
             ApiOperation.Success(data = apiCall())
         } catch (e : Exception) {
-            ApiOperation.Failure(e)
+            ApiOperation.Failure(exception = e)
         }
     }
 }
@@ -58,7 +58,7 @@ sealed interface ApiOperation<T> {
     data class Failure<T>(val exception : Exception) : ApiOperation<T>
 
     fun onSuccess(block : (T) -> Unit) : ApiOperation<T> {
-        if (this is Success) block (data)
+        if (this is Success) block(data)
         return this
     }
 
