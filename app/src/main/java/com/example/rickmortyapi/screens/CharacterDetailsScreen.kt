@@ -35,6 +35,7 @@ import com.example.rickmortyapi.components.common.DataPointComponent
 import com.example.rickmortyapi.ui.theme.RickAction
 import kotlinx.coroutines.delay
 import com.example.network.models.domain.Character
+import com.example.rickmortyapi.components.common.LoadingState
 
 @Composable
 fun CharacterDetailsScreen(
@@ -58,7 +59,7 @@ fun CharacterDetailsScreen(
                         add(DataPoint("Type", type))
                     }
                     add(DataPoint("Origin", character.origin.name))
-                    add(DataPoint("Episode count", character.episodeUrls.size.toString()))
+                    add(DataPoint("Episode count", character.episodeIds.size.toString()))
                 }
             }
         }
@@ -169,12 +170,14 @@ fun CharacterDetailsScreen(
 
 }
 
+/*
 @Composable
-private fun LoadingState() {
+fun LoadingState() {
     CircularProgressIndicator(
         modifier = Modifier
             .fillMaxSize()
             .padding(128.dp),
         color = RickAction
     )
-}
+ }
+*/

@@ -32,6 +32,7 @@ import com.example.network.models.domain.Character
 import com.example.network.KtorClient
 import com.example.network.TestFile
 import com.example.rickmortyapi.screens.CharacterDetailsScreen
+import com.example.rickmortyapi.screens.CharacterEpisodeScreen
 import com.example.rickmortyapi.ui.theme.RickAction
 import com.example.rickmortyapi.ui.theme.RickMortyAPITheme
 import com.example.rickmortyapi.ui.theme.RickPrimary
@@ -84,7 +85,10 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("characterId") { type = NavType.IntType })
                         ) { backStackEntry ->
                             val characterId: Int = backStackEntry.arguments?.getInt("characterId") ?: -1
-                            CharacterEpisodeScreen(characterId = characterId)
+                            CharacterEpisodeScreen(
+                                characterId = characterId,
+                                ktorClient = ktorClient
+                            )
                         }
                     }
                     /*
@@ -101,6 +105,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/*
+MSpostato al suo file proprio
 @Composable
 fun CharacterEpisodeScreen(characterId : Int) {
     Box(
@@ -114,3 +120,5 @@ fun CharacterEpisodeScreen(characterId : Int) {
         )
     }
 }
+
+*/
