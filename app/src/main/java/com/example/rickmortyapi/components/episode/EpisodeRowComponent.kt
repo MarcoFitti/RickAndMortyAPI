@@ -33,6 +33,7 @@ fun EpisodeRowComponent(episode: Episode) {
         Column() {
             Text(
                 text = episode.name,
+                fontSize  = 24.sp,
                 color = RickTextPrimary,
                 textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth()

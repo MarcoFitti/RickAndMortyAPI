@@ -1,16 +1,20 @@
 package com.example.rickmortyapi.screens
 
+import android.provider.ContactsContract.Data
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -30,6 +34,8 @@ import com.example.network.models.domain.Character
 import com.example.network.models.domain.Episode
 import com.example.rickmortyapi.components.common.CharacterImage
 import com.example.rickmortyapi.components.common.CharacterNameComponent
+import com.example.rickmortyapi.components.common.DataPoint
+import com.example.rickmortyapi.components.common.DataPointComponent
 import com.example.rickmortyapi.components.common.LoadingState
 import com.example.rickmortyapi.components.episode.EpisodeRowComponent
 import com.example.rickmortyapi.ui.theme.RickAction
@@ -87,20 +93,32 @@ fun MainScreen(
     character: Character,
     episodes : List<Episode>
 ) {
-    LazyColumn {
+
+    val episodeBySeasonMap= episodes.groupBy { it.seasonNumber }
+
+    LazyColumn(contentPadding = PaddingValues(all = 16.dp)) {
         item { CharacterNameComponent(name = character.name) }
         item { Spacer(modifier = Modifier.height(16.dp)) }
-        item { CharacterImage(imageUrl = character.imageUrl)}
-
-        episodes
-            .groupBy { episode ->
-                episode.seasonNumber
+        item {
+            LazyRow {
+                episodeBySeasonMap.forEach { mapEntry ->
+                    val title = "Season ${mapEntry.key}"
+                    val description = "${mapEntry.value.size} ep"
+                    item { DataPointComponent(dataPoint = DataPoint(title,description)) }
+                    item { Spacer(modifier = Modifier.width(16.dp)) }
+                }
             }
-            .forEach { mapEntry ->
-                stickyHeader { SeasonHeader(seasonNumber = mapEntry.key) }
-                item { Spacer(modifier = Modifier.height(16.dp)) }
-                items(mapEntry.value) {episode ->
+        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item { CharacterImage(imageUrl = character.imageUrl)}
+        item { Spacer(modifier = Modifier.height(32.dp)) }
+
+        episodeBySeasonMap.forEach { mapEntry ->
+            stickyHeader { SeasonHeader(seasonNumber = mapEntry.key) }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            items(mapEntry.value) {episode ->
                 EpisodeRowComponent(episode = episode)
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
