@@ -36,11 +36,15 @@ import com.example.rickmortyapi.screens.CharacterEpisodeScreen
 import com.example.rickmortyapi.ui.theme.RickAction
 import com.example.rickmortyapi.ui.theme.RickMortyAPITheme
 import com.example.rickmortyapi.ui.theme.RickPrimary
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val ktorClient = KtorClient()
+    @Inject
+    lateinit var ktorClient: KtorClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
