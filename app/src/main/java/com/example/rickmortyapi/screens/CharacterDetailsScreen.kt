@@ -4,12 +4,14 @@ import android.provider.ContactsContract.Data
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,6 +43,8 @@ import com.example.rickmortyapi.components.common.DataPointComponent
 import com.example.rickmortyapi.ui.theme.RickAction
 import kotlinx.coroutines.delay
 import com.example.network.models.domain.Character
+import com.example.rickmortyapi.components.character.CharacterGridItem
+import com.example.rickmortyapi.components.character.CharacterListItem
 import com.example.rickmortyapi.components.common.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -205,6 +209,38 @@ fun CharacterDetailsScreen(
             }
 
             is CharacterDetailsViewState.Success -> {
+                item {
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        CharacterGridItem(
+                            modifier = Modifier.weight(1f),
+                            character = viewState.character
+                        ) {
+
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        CharacterGridItem(
+                            modifier = Modifier.weight(1f),
+                            character = viewState.character
+                        ) {
+
+                        }
+
+                    }
+                }
+                repeat(10) {
+                    item { Spacer(modifier = Modifier.height(16.dp)) }
+                    item {
+                        CharacterListItem(
+                            character = viewState.character,
+                            characterDataPoints = viewState.characterDataPoints
+                        ) {
+
+                        }
+                    }
+                }
+                /*
                 //NAME PLATE
                 item {
                     CharacterDetailsNamePlateComponent(
@@ -270,21 +306,8 @@ fun CharacterDetailsScreen(
                 }
 
                 item { Spacer(modifier = Modifier.height(64.dp)) }
-
+                */
             }
         }
     }
 }
-
-
-/*
-@Composable
-fun LoadingState() {
-    CircularProgressIndicator(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(128.dp),
-        color = RickAction
-    )
- }
-*/
