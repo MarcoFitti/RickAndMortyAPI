@@ -33,6 +33,7 @@ import com.example.network.KtorClient
 import com.example.network.TestFile
 import com.example.rickmortyapi.screens.CharacterDetailsScreen
 import com.example.rickmortyapi.screens.CharacterEpisodeScreen
+import com.example.rickmortyapi.screens.HomeScreen
 import com.example.rickmortyapi.ui.theme.RickAction
 import com.example.rickmortyapi.ui.theme.RickMortyAPITheme
 import com.example.rickmortyapi.ui.theme.RickPrimary
@@ -50,22 +51,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
         setContent {
-            /*
-            var character by remember {
-                mutableStateOf<Character?>(null)
-            }
-
-
-            LaunchedEffect(
-                key1 = Unit,
-                block = {
-                    delay(3000)
-                    character = ktorClient.getCharacter(12)
-                }
-            )
-            */
-
-            val navController = rememberNavController()
+             val navController = rememberNavController()
 
             RickMortyAPITheme {
                 Surface(
@@ -74,8 +60,13 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "character_details"
+                        startDestination = "home_screen"
                     ) {
+                        composable(route = "home_screen") {
+                            HomeScreen(onCharacterSelected = {
+                                // TODO navigate
+                            })
+                        }
                         composable(route = "character_details")  {
                             CharacterDetailsScreen(
                                 //ktorClient = ktorClient,
