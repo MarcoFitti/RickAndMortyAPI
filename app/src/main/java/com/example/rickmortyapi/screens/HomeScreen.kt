@@ -26,8 +26,8 @@ sealed interface HomeScreenViewState {
     data class GridDisplay(
         val characters : List<Character> = emptyList()
     ) : HomeScreenViewState
-
 }
+
 
 @Composable
 fun HomeScreen(
@@ -45,6 +45,7 @@ fun HomeScreen(
 
     val fetchNextPage : Boolean by remember {
         derivedStateOf {
+            //as? = casting in classe specifica: se ha successo prosegue, altrimenti ritorna null
             val currentCharacterCount = (viewState as? HomeScreenViewState.GridDisplay)?.characters?.size
                 ?: return@derivedStateOf false
             val lastDisplayedIndex = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index

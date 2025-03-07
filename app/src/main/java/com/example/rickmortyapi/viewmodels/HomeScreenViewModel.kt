@@ -6,6 +6,7 @@ import com.example.network.models.domain.CharacterPage
 import com.example.rickmortyapi.repositories.CharacterRepository
 import com.example.rickmortyapi.screens.HomeScreenViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,12 +37,12 @@ class HomeScreenViewModel @Inject constructor(
             }
     }
 
-    fun fetchNextPage() = viewModelScope.launch {
+    fun fetchNextPage() : Job = viewModelScope.launch {
         val nextPageIndex = fetchedCharacterPages.size + 1
         characterRepository.fetchCharacterPage(page = nextPageIndex)
             .onSuccess { characterPage ->
                 fetchedCharacterPages.add(characterPage)
-                _viewState.update {currentState ->
+                _viewState.update { currentState ->
                     val currentCharacters = (currentState as? HomeScreenViewState.GridDisplay)?.characters
                         ?: emptyList()
                     return@update HomeScreenViewState.GridDisplay(characters = characterPage.characters)
