@@ -30,14 +30,16 @@ class HomeScreenViewModel @Inject constructor(
             .onSuccess { characterPage ->
                 fetchedCharacterPages.clear()
                 fetchedCharacterPages.add(characterPage)
-                _viewState.update { return@update HomeScreenViewState.GridDisplay(characters = characterPage.characters) }
+                _viewState.update {
+                    return@update HomeScreenViewState.GridDisplay(characters = characterPage.characters)
+                }
             }
             .onFailure {
                 // TODO
             }
     }
 
-    fun fetchNextPage() : Job = viewModelScope.launch {
+    fun fetchNextPage() = viewModelScope.launch {
         val nextPageIndex = fetchedCharacterPages.size + 1
         characterRepository.fetchCharacterPage(page = nextPageIndex)
             .onSuccess { characterPage ->
@@ -45,7 +47,7 @@ class HomeScreenViewModel @Inject constructor(
                 _viewState.update { currentState ->
                     val currentCharacters = (currentState as? HomeScreenViewState.GridDisplay)?.characters
                         ?: emptyList()
-                    return@update HomeScreenViewState.GridDisplay(characters = characterPage.characters)
+                    return@update HomeScreenViewState.GridDisplay(characters = currentCharacters +characterPage.characters)
                 }
             }
             .onFailure {

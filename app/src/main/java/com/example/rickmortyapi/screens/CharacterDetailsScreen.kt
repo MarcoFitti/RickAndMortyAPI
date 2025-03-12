@@ -65,12 +65,9 @@ fun CharacterDetailsScreen(
     val state by viewModel.stateFlow.collectAsState()
 
     Column(){
-
         SimpleToolbar(
             title = "Character details",
-            onBackAction = {
-                onBackClicked()
-            }
+            onBackAction = onBackClicked
         )
 
         LazyColumn(

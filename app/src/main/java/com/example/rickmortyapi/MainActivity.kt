@@ -68,9 +68,11 @@ class MainActivity : ComponentActivity() {
 
                         composable(
                             route = "character_episodes/{characterId}",
-                            arguments = listOf(navArgument("characterId") { type = NavType.IntType })
+                            arguments = listOf(navArgument("characterId") {
+                                type = NavType.IntType
+                            })
                         ) { backStackEntry ->
-                            val characterId: Int = backStackEntry.arguments?.getInt("characterId") ?: -1
+                            val characterId : Int = backStackEntry.arguments?.getInt("characterId") ?: -1
                             CharacterEpisodeScreen(
                                 characterId = characterId,
                                 ktorClient = ktorClient,

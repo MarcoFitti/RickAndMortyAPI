@@ -58,9 +58,7 @@ fun HomeScreen(
 
     LaunchedEffect(
         key1 = fetchNextPage,
-        block = {
-          if(fetchNextPage) viewModel.fetchNextPage()
-        }
+        block = { if(fetchNextPage) viewModel.fetchNextPage() }
     )
 
 
@@ -80,7 +78,7 @@ fun HomeScreen(
                        items(
                            items = state.characters,
                            key = { it.id }
-                       ) {character ->
+                       ) { character ->
                            CharacterGridItem(
                                modifier = Modifier,
                                character = character

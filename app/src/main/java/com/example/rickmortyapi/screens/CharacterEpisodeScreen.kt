@@ -47,7 +47,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CharacterEpisodeScreen(
-    characterId: Int, ktorClient: KtorClient,
+    characterId: Int,
+    ktorClient: KtorClient,
     onBackClicked: () -> Unit
 ) {
     var characterState by remember { mutableStateOf<Character?>(null) }
