@@ -1,6 +1,7 @@
 package com.example.rickmortyapi.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,6 +19,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.network.models.domain.Character
 import com.example.rickmortyapi.components.character.CharacterGridItem
 import com.example.rickmortyapi.components.common.LoadingState
+import com.example.rickmortyapi.components.common.SimpleToolbar
 import com.example.rickmortyapi.viewmodels.HomeScreenViewModel
 
 
@@ -65,27 +67,31 @@ fun HomeScreen(
     when(val state = viewState) {
         HomeScreenViewState.Loading -> LoadingState()
         is HomeScreenViewState.GridDisplay -> {
-            LazyVerticalGrid(
-                state = scrollState,
-                contentPadding = PaddingValues(all = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                columns = GridCells.Fixed(2),
-                content = {
-                   items(
-                       items = state.characters,
-                       key = { it.id }
-                   ) {character ->
-                       CharacterGridItem(
-                           modifier = Modifier,
-                           character = character
-                       ) {
-                           onCharacterSelected(character.id)
-                       }
+           Column {
+               SimpleToolbar(title = "All characters")
 
+               LazyVerticalGrid(
+                   state = scrollState,
+                   contentPadding = PaddingValues(all = 16.dp),
+                   verticalArrangement = Arrangement.spacedBy(8.dp),
+                   horizontalArrangement = Arrangement.spacedBy(8.dp),
+                   columns = GridCells.Fixed(2),
+                   content = {
+                       items(
+                           items = state.characters,
+                           key = { it.id }
+                       ) {character ->
+                           CharacterGridItem(
+                               modifier = Modifier,
+                               character = character
+                           ) {
+                               onCharacterSelected(character.id)
+                           }
+
+                       }
                    }
-                }
-            )
+               )
+           }
         }
     }
 

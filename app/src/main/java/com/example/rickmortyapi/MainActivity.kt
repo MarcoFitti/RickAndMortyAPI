@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -28,7 +29,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         setContent {
              val navController = rememberNavController()
 
@@ -55,9 +55,15 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val characterId : Int =
                                 backStackEntry.arguments?.getInt("characterId") ?: -1
-                            CharacterDetailsScreen(characterId = characterId) {
-                                navController.navigate("character_episodes/$characterId")
-                            }
+                            CharacterDetailsScreen(
+                                characterId = characterId,
+                                onEpisodeClicked = {
+                                    navController.navigate("character_episodes/$it")
+                                },
+                                onBackClicked = {
+                                    navController.navigateUp()
+                                }
+                            )
                         }
 
                         composable(
@@ -67,38 +73,18 @@ class MainActivity : ComponentActivity() {
                             val characterId: Int = backStackEntry.arguments?.getInt("characterId") ?: -1
                             CharacterEpisodeScreen(
                                 characterId = characterId,
-                                ktorClient = ktorClient
+                                ktorClient = ktorClient,
+                                onBackClicked = { navController.navigateUp() }
                             )
                         }
                     }
-                    /*
-                    CharacterDetailsScreen(
-                        ktorClient = ktorClient,
-                        characterId = 1
-                    )
-
-                    */
                 }
-
             }
         }
     }
 }
 
-/*
-MSpostato al suo file proprio
-@Composable
-fun CharacterEpisodeScreen(characterId : Int) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Character episode screen: $characterId",
-            fontSize = 28.sp,
-            color = RickAction
-        )
-    }
-}
 
-*/
+
+
+
