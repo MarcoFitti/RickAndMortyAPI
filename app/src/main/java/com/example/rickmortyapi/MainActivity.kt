@@ -37,6 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.network.KtorClient
+import com.example.rickmortyapi.screens.AllEpisodesScreen
 import com.example.rickmortyapi.screens.CharacterDetailsScreen
 import com.example.rickmortyapi.screens.CharacterEpisodeScreen
 import com.example.rickmortyapi.screens.HomeScreen
@@ -186,11 +187,7 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "EPISODES",
-                        fontSize = 62.sp,
-                        color = Color.White
-                    )
+                  AllEpisodesScreen()
                 }
             }
 

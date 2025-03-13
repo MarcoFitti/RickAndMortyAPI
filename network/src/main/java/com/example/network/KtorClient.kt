@@ -3,12 +3,15 @@ package com.example.network
 import com.example.network.models.domain.Character
 import com.example.network.models.domain.CharacterPage
 import com.example.network.models.domain.Episode
+import com.example.network.models.domain.EpisodePage
 import com.example.network.models.remote.RemoteCharacter
 import com.example.network.models.remote.RemoteCharacterPage
 import com.example.network.models.remote.RemoteEpisode
+import com.example.network.models.remote.RemoteEpisodePage
 import com.example.network.models.remote.toDomainCharacter
 import com.example.network.models.remote.toDomainCharacterPage
 import com.example.network.models.remote.toDomainEpisode
+import com.example.network.models.remote.toDomainEpisodePage
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -52,11 +55,11 @@ class KtorClient {
             client.get("character/$id")
                 .body<RemoteCharacter>()
                 .toDomainCharacter()
-                .also{ characterCache[id] = it }
+                .also { characterCache[id] = it }
         }
     }
 
-    suspend fun getEpisode(episodeId : Int) : ApiOperation<Episode> {
+    suspend fun getEpisode(episodeId: Int): ApiOperation<Episode> {
         return safeApiCall {
             client.get("episode/$episodeId")
                 .body<RemoteEpisode>()
@@ -84,7 +87,7 @@ class KtorClient {
         }
     }
 
-    suspend fun getCharacterByPage(pageNumber : Int) : ApiOperation<CharacterPage> {
+    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<CharacterPage> {
         return safeApiCall {
             client.get("character/?page=$pageNumber")
                 .body<RemoteCharacterPage>()
@@ -92,39 +95,82 @@ class KtorClient {
         }
     }
 
-    private inline fun <T> safeApiCall(apiCall : () -> T) : ApiOperation<T> {
+
+    suspend fun getEpisodesByPage(pageIndex: Int): ApiOperation<EpisodePage> {
+        return safeApiCall {
+            client.get("episode") {
+                url {
+                    parameters.append("page", pageIndex.toString())
+                }
+            }
+                .body<RemoteEpisodePage>()
+                .toDomainEpisodePage()
+        }
+    }
+
+    suspend fun getAllEpisodes(): ApiOperation<List<Episode>> {
+        val data = mutableListOf<Episode>()
+        var exception: Exception? = null
+
+        getEpisodesByPage(pageIndex = 1).onSuccess { firstPage ->
+            val totalPageCount = firstPage.info.pages
+            data.addAll(firstPage.episodes)
+
+            //Un'altra volta, problemi per omissioni nel video: dava errore in "getEpisodesByPage" perché la funzione "onSuccess" non era suspend
+            //Leggendo i commenti nel video ho trovato qualcuno che ha fatto l'osservazione al cambiamento del codice
+            repeat(totalPageCount - 1) { index ->
+                getEpisodesByPage(pageIndex = index + 2).onSuccess { nextPage ->
+                    data.addAll(nextPage.episodes)
+                }.onFailure { error ->
+                    exception = error
+                }
+
+                if (exception == null) { return@onSuccess }
+            }
+        }.onFailure {
+            exception = it
+        }
+
+        return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
+    }
+
+
+    private inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
         return try {
             ApiOperation.Success(data = apiCall())
-        } catch (e : Exception) {
+        } catch (e: Exception) {
             ApiOperation.Failure(exception = e)
         }
     }
 }
 
+
 //Per gestire gli errori
 sealed interface ApiOperation<T> {
     //Definiamo due casi: successo...
-    data class Success<T>(val data : T) : ApiOperation<T>
-    //.. e fallimento
-    data class Failure<T>(val exception : Exception) : ApiOperation<T>
+    data class Success<T>(val data: T) : ApiOperation<T>
 
-    fun <R> mapSuccess(transform: (T) -> R) : ApiOperation<R> {
+    //.. e fallimento
+    data class Failure<T>(val exception: Exception) : ApiOperation<T>
+
+    fun <R> mapSuccess(transform: (T) -> R): ApiOperation<R> {
         return when (this) {
             is Success -> Success(transform(data))
             is Failure -> Failure(exception)
         }
     }
 
-    fun onSuccess(block : (T) -> Unit) : ApiOperation<T> {
+
+
+    suspend fun onSuccess(block: suspend (T) -> Unit): ApiOperation<T> {
         if (this is Success) block(data)
         return this
     }
 
-    fun onFailure(block : (Exception) -> Unit) : ApiOperation<T> {
-        if (this is Failure) block (exception)
+    fun onFailure(block: (Exception) -> Unit): ApiOperation<T> {
+        if (this is Failure) block(exception)
         return this
     }
-
 }
 
 
