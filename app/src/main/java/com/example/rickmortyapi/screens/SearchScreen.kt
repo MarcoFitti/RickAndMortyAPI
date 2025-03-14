@@ -119,6 +119,4 @@ class SearchViewModel @Inject constructor() : ViewModel() {
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 2000),
             initialValue = ""
         )
-    //Commento
-
 }
