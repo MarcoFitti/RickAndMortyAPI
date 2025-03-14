@@ -41,6 +41,7 @@ import com.example.rickmortyapi.screens.AllEpisodesScreen
 import com.example.rickmortyapi.screens.CharacterDetailsScreen
 import com.example.rickmortyapi.screens.CharacterEpisodeScreen
 import com.example.rickmortyapi.screens.HomeScreen
+import com.example.rickmortyapi.screens.SearchScreen
 import com.example.rickmortyapi.ui.theme.RickAction
 import com.example.rickmortyapi.ui.theme.RickMortyAPITheme
 import com.example.rickmortyapi.ui.theme.RickPrimary
@@ -197,11 +198,7 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "SEARCH",
-                        fontSize = 62.sp,
-                        color = Color.White
-                    )
+                    SearchScreen()
                 }
 
             }
