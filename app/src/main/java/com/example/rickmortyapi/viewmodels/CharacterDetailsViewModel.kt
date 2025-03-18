@@ -6,6 +6,7 @@ import com.example.network.ApiOperation
 import com.example.network.KtorClient
 import com.example.network.models.domain.Character
 import com.example.rickmortyapi.components.common.DataPoint
+import com.example.rickmortyapi.repositories.CharacterRepository
 import com.example.rickmortyapi.screens.CharacterDetailsViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,14 +15,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class CharacterRepository @Inject constructor(private val ktorClient: KtorClient) {
-    suspend fun fetchCharacter(characterId : Int) : ApiOperation<Character> {
-        return ktorClient.getCharacter(characterId)
-    }
-}
+
 @HiltViewModel
 class CharacterDetailsViewModel @Inject constructor(
-    private val characterRepository: CharacterRepository
+    private val characterRepository : CharacterRepository
 ) : ViewModel() {
     private val _internalStorageFlow = MutableStateFlow<CharacterDetailsViewState>(
         value = CharacterDetailsViewState.Loading
