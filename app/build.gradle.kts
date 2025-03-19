@@ -10,7 +10,7 @@ android {
     namespace = "com.example.rickmortyapi"
     compileSdk = 35
 
-   defaultConfig {
+    defaultConfig {
         applicationId = "com.example.rickmortyapi"
         minSdk = 26
         targetSdk = 35
@@ -29,6 +29,7 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -39,8 +40,8 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions{
-        kotlinCompilerExtensionVersion ="1.4.3"
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.3"
     }
 }
 

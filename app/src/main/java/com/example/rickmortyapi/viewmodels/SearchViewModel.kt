@@ -48,9 +48,7 @@ class SearchViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private val searchTextState : StateFlow<SearchState> = snapshotFlow { searchTextFieldState.text }
         .debounce(500)
-        .mapLatest { text ->
-            if (text.isBlank()) SearchState.Empty
-            else SearchState.UserQuery(text.toString()) }
+        .mapLatest { if (it.isBlank()) SearchState.Empty else SearchState.UserQuery(it.toString()) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 2000),
