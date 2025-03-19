@@ -42,10 +42,12 @@ class KtorClient {
         }
     }
 
-    //CACHING: una volta svolte delle chiamate di rete, permette di salvare delle informazioni
-    //per prevenire la necessità di dover svolgere nuove chiamate per dati già acquisiti recentemente
-    //In questo es.: salviamo le informazioni principali del personaggio per non doverle richiamare
-    // ogni volta che scorriamo dalla loro  schermata a quella degli episodi
+    /*
+    CACHING: una volta svolte delle chiamate di rete, permette di salvare delle informazioni
+    per prevenire la necessità di dover svolgere nuove chiamate per dati già acquisiti recentemente
+    In questo es.: salviamo le informazioni principali del personaggio per non doverle richiamare
+    ogni volta che scorriamo dalla loro  schermata a quella degli episodi
+    */
     private var characterCache = mutableMapOf<Int, Character>()
 
 
@@ -126,7 +128,8 @@ class KtorClient {
 
                 if (exception == null) { return@onSuccess }
             }
-        }.onFailure { exception = it }
+        }.onFailure {
+            exception = it }
 
         return exception?.let {ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
 
@@ -182,7 +185,6 @@ class KtorClient {
 }
 
 
-//Per gestire gli errori
 sealed interface ApiOperation<T> {
     //Definiamo due casi: successo...
     data class Success<T>(val data: T) : ApiOperation<T>
@@ -209,18 +211,3 @@ sealed interface ApiOperation<T> {
         return this
     }
 }
-
-
-/*
-@Serializable
-data class Character(
-    val id : Int,
-    val name : String,
-    val origin : Origin
-) {
-    @Serializable
-    data class Origin(
-        val name : String
-    )
-}
-*/
