@@ -9,6 +9,7 @@ import com.example.rickmortyapi.repositories.CharacterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -66,6 +67,7 @@ class SearchViewModel @Inject constructor(
 
     private fun searchAllCharacters(query : String) = viewModelScope.launch {
         _uiState.update { ScreenState.Searching }
+        delay(4000)
         characterRepository.fetchAllCharactersByName(searchQuery = query)
             .onSuccess { characters ->
                 ScreenState.Content(
@@ -74,7 +76,7 @@ class SearchViewModel @Inject constructor(
                 )
             }
             .onFailure { exception ->
-                _uiState.update { ScreenState.Error(exception.message ?: "Error") }
+                _uiState.update { ScreenState.Error("No search results found") }
 
             }
 

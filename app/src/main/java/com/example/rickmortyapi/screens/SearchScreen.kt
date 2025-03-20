@@ -17,11 +17,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.delete
 import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -60,11 +63,11 @@ fun SearchScreen(searchViewModel : SearchViewModel = hiltViewModel()) {
         AnimatedVisibility(visible = screenState is SearchViewModel.ScreenState.Searching) {
             LinearProgressIndicator(
                 modifier = Modifier
-                    .height(4.dp)
-                    .fillMaxWidth(),
-                color = RickAction
+                    .height(6.dp)
+                    .fillMaxWidth()
             )
         }
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -133,6 +136,19 @@ fun SearchScreen(searchViewModel : SearchViewModel = hiltViewModel()) {
                     textAlign = TextAlign.Center,
                     fontSize = 26.sp
                 )
+
+                Button(
+                    colors = ButtonDefaults.buttonColors().copy(containerColor = RickAction),
+                    onClick = { searchViewModel.searchTextFieldState.clearText() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 84.dp)
+                ) {
+                    Text(
+                        text = "Clear search",
+                        color = RickPrimary
+                    )
+                }
             }
 
             is SearchViewModel.ScreenState.Content -> SearchScreenContent(content = state)
