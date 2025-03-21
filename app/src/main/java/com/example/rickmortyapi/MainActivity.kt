@@ -198,7 +198,11 @@ class MainActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    SearchScreen()
+                    SearchScreen(
+                        onCharacterClicked = { characterId ->
+                            navController.navigate("character_details/$characterId")
+                        }
+                    )
                 }
 
             }
